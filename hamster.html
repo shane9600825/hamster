@@ -17,7 +17,7 @@
             font-weight: bold;
             margin-bottom: 5px;
         }
-        input[type="text"], input[type="range"], button {
+        input[type="range"], button {
             padding: 10px;
             margin: 5px 0;
             border: 1px solid #ccc;
@@ -45,15 +45,14 @@
             width: 60px;
             text-align: left;
         }
+        #countdown {
+            font-size: 2em;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
     <h1>餵食控制</h1>
-    
-    <div class="input-container">
-        <label for="authToken">Auth Token:</label>
-        <input type="text" id="authToken" placeholder="CRbcOydyHiTOJTJNBd3kA4XQn2EBjCoP">
-    </div>
     
     <div class="input-container">
         <label for="feedingTime">餵食時間 (毫秒):</label>
@@ -74,13 +73,17 @@
     <div>
         <button onclick="connectAndFeedNow()">立即餵食</button>
     </div>
+
+    <div id="countdown"></div>
     
     <script src="https://cdn.jsdelivr.net/npm/blynk-library/blynk.js"></script>
     <script>
         var blynk;
+        var countdownInterval;
 
         function connectToBlynk() {
-            var authToken = document.getElementById("authToken").value;
+            // var authToken = document.getElementById("authToken").value;
+            var authToken = "CRbcOydyHiTOJTJNBd3kA4XQn2EBjCoP"; // 在這裡設置你的 Auth Token
             blynk = new Blynk.Blynk(authToken);
         }
 
@@ -92,9 +95,23 @@
         function feedNow() {
             if (blynk) {
                 blynk.virtualWrite(4, 1); // 将虚拟引脚设置为V4
+                var feedingTime = document.getElementById("feedingTime").value;
+                startCountdown(feedingTime / 1000); // 将毫秒转换为秒并启动倒计时
             } else {
                 console.error("請先連接到Blynk");
             }
+        }
+
+        function startCountdown(seconds) {
+            var countdownElement = document.getElementById("countdown");
+            countdownElement.textContent = seconds;
+            countdownInterval = setInterval(function() {
+                seconds--;
+                countdownElement.textContent = seconds;
+                if (seconds <= 0) {
+                    clearInterval(countdownInterval);
+                }
+            }, 1000);
         }
 
         function updateFeedingTimeValue(value) {
