@@ -11,7 +11,7 @@
         .input-container {
             margin-bottom: 20px;
         }
-        input[type="text"], input[type="time"], input[type="range"], button {
+        input[type="text"], input[type="range"], button {
             padding: 10px;
             margin: 5px;
             border: 1px solid #ccc;
@@ -37,8 +37,9 @@
     </div>
     
     <div class="input-container">
-        <label for="feedingTime">餵食時間:</label>
-        <input type="time" id="feedingTime">
+        <label for="feedingTime">餵食時間 (小時):</label>
+        <input type="range" id="feedingTime" min="0" max="23" value="12">
+        <span id="feedingTimeValue">12</span> 小時
     </div>
     
     <div class="input-container">
@@ -76,8 +77,8 @@
             var feedingDelay = document.getElementById("feedingDelay").value;
 
             if (blynk) {
-                blynk.virtualWrite(5, feedingTime); // 将虚拟引脚设置为V5
-                blynk.virtualWrite(2, feedingDelay); // 保持滑桿为V2
+                blynk.virtualWrite(5, feedingTime); // 将滑桿的值发送到V5
+                blynk.virtualWrite(2, feedingDelay); // 将滑桿的值发送到V2
             } else {
                 console.error("請先連接到Blynk");
             }
@@ -85,11 +86,18 @@
 
         function feedNow() {
             if (blynk) {
-                blynk.virtualWrite(4, 1); // 保持虚拟引脚为V4
+                blynk.virtualWrite(4, 1); // 将虚拟引脚设置为V4
             } else {
                 console.error("請先連接到Blynk");
             }
         }
+
+        document.getElementById("feedingTime").addEventListener("input", function() {
+            document.getElementById("feedingTimeValue").textContent = this.value;
+            if (blynk) {
+                blynk.virtualWrite(5, this.value); // 将滑桿的值发送到V5
+            }
+        });
 
         document.getElementById("feedingDelay").addEventListener("input", function() {
             document.getElementById("feedingDelayValue").textContent = this.value;
