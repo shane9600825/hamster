@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>餵食控制</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        .input-container {
+            margin-bottom: 20px;
+        }
+        input[type="text"], input[type="time"], input[type="range"], button {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>餵食控制</h1>
+    
+    <div class="input-container">
+        <label for="authToken">Auth Token:</label>
+        <input type="text" id="authToken" placeholder="輸入你的Auth Token">
+    </div>
+    
+    <div class="input-container">
+        <label for="feedingTime">餵食時間:</label>
+        <input type="time" id="feedingTime">
+    </div>
+    
+    <div class="input-container">
+        <label for="feedingDelay">多久後餵食 (分鐘):</label>
+        <input type="range" id="feedingDelay" min="1" max="60" value="5">
+        <span id="feedingDelayValue">5</span> 分鐘
+    </div>
+    
+    <div>
+        <button onclick="scheduleFeeding()">安排餵食</button>
+        <button onclick="feedNow()">立即餵食</button>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blynk-library/0.6.1/blynk.js"></script>
+    <script>
+        var blynk;
+        
+        function connectToBlynk() {
+            var authToken = document.getElementById("authToken").value;
+            blynk = new Blynk.Blynk(authToken);
+        }
+
+        function scheduleFeeding() {
+            var feedingTime = document.getElementById("feedingTime").value;
+            var feedingDelay = document.getElementById("feedingDelay").value;
+
+            if (blynk) {
+                // 將選擇的時間和延遲發送到Blynk服務器
+                blynk.virtualWrite(V1, feedingTime);
+                blynk.virtualWrite(V2, feedingDelay);
+            } else {
+                console.error("請先連接到Blynk");
+            }
+        }
+
+        function feedNow() {
+            if (blynk) {
+                // 發送一個立即餵食的指令到Blynk服務器
+                blynk.virtualWrite(V3, 1);
+            } else {
+                console.error("請先連接到Blynk");
+            }
+        }
+
+        // 更新滑桿的值顯示
+        document.getElementById("feedingDelay").addEventListener("input", function() {
+            document.getElementById("feedingDelayValue").textContent = this.value;
+        });
+    </script>
+</body>
+</html>
