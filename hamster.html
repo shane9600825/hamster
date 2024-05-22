@@ -109,13 +109,20 @@
             }, 1000);
         }
 
-        function updateFeedingTimeValue(value) {
-            document.getElementById("feedingTimeValue").textContent = value;
-        }
+    function updateFeedingTimeValue(value) {
+    document.getElementById("feedingTimeValue").textContent = value;
+    if (blynk) {
+        blynk.virtualWrite(5, value); // 将滑桿的值发送到V5
+    }
+}
 
-        function updateFeedingDelayValue(value) {
-            document.getElementById("feedingDelayValue").textContent = value;
-        }
+function updateFeedingDelayValue(value) {
+    document.getElementById("feedingDelayValue").textContent = value;
+    if (blynk) {
+        blynk.virtualWrite(2, value); // 将滑桿的值发送到V2
+    }
+}
+
     </script>
 </body>
 </html>
