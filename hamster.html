@@ -48,17 +48,27 @@
     </div>
     
     <div>
-        <button onclick="scheduleFeeding()">安排餵食</button>
-        <button onclick="feedNow()">立即餵食</button>
+        <button onclick="connectAndScheduleFeeding()">安排餵食</button>
+        <button onclick="connectAndFeedNow()">立即餵食</button>
     </div>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/blynk-library/0.6.1/blynk.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/blynk-library/blynk.js"></script>
     <script>
         var blynk;
-        
+
         function connectToBlynk() {
             var authToken = document.getElementById("authToken").value;
             blynk = new Blynk.Blynk(authToken);
+        }
+
+        function connectAndScheduleFeeding() {
+            connectToBlynk();
+            scheduleFeeding();
+        }
+
+        function connectAndFeedNow() {
+            connectToBlynk();
+            feedNow();
         }
 
         function scheduleFeeding() {
@@ -66,9 +76,8 @@
             var feedingDelay = document.getElementById("feedingDelay").value;
 
             if (blynk) {
-                // 將選擇的時間和延遲發送到Blynk服務器
-                blynk.virtualWrite(V1, feedingTime);
-                blynk.virtualWrite(V2, feedingDelay);
+                blynk.virtualWrite(1, feedingTime);
+                blynk.virtualWrite(2, feedingDelay);
             } else {
                 console.error("請先連接到Blynk");
             }
@@ -76,16 +85,17 @@
 
         function feedNow() {
             if (blynk) {
-                // 發送一個立即餵食的指令到Blynk服務器
-                blynk.virtualWrite(V3, 1);
+                blynk.virtualWrite(4, 1); // 将虚拟引脚设置为V4
             } else {
                 console.error("請先連接到Blynk");
             }
         }
 
-        // 更新滑桿的值顯示
         document.getElementById("feedingDelay").addEventListener("input", function() {
             document.getElementById("feedingDelayValue").textContent = this.value;
+            if (blynk) {
+                blynk.virtualWrite(2, this.value); // 將滑桿的值發送到V2
+            }
         });
     </script>
 </body>
