@@ -76,30 +76,25 @@
 
     <div id="countdown"></div>
     
-    <script src="https://cdn.jsdelivr.net/npm/blynk-library/blynk.js"></script>
     <script>
-        var blynk;
         var countdownInterval;
 
-        function connectToBlynk() {
-            // var authToken = document.getElementById("authToken").value;
-            var authToken = "CRbcOydyHiTOJTJNBd3kA4XQn2EBjCoP"; // 在這裡設置你的 Auth Token
-            blynk = new Blynk.Blynk(authToken);
-        }
-
         function connectAndFeedNow() {
-            connectToBlynk();
             feedNow();
         }
 
         function feedNow() {
-            if (blynk) {
-                blynk.virtualWrite(4, 1); // 将虚拟引脚设置为V4
+            fetch('https://sgp1.blynk.cloud/external/api/update?token=CRbcOydyHiTOJTJNBd3kA4XQn2EBjCoP&v4=1', {
+                method: 'GET'
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
                 var feedingTime = document.getElementById("feedingTime").value;
                 startCountdown(feedingTime / 1000); // 将毫秒转换为秒并启动倒计时
-            } else {
-                console.error("請先連接到Blynk");
-            }
+            }).catch(error => {
+                console.error('There has been a problem with your fetch operation:', error);
+            });
         }
 
         function startCountdown(seconds) {
@@ -116,16 +111,10 @@
 
         function updateFeedingTimeValue(value) {
             document.getElementById("feedingTimeValue").textContent = value;
-            if (blynk) {
-                blynk.virtualWrite(5, value); // 将滑桿的值发送到V5
-            }
         }
 
         function updateFeedingDelayValue(value) {
             document.getElementById("feedingDelayValue").textContent = value;
-            if (blynk) {
-                blynk.virtualWrite(2, value); // 将滑桿的值发送到V2
-            }
         }
     </script>
 </body>
