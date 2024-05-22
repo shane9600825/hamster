@@ -7,24 +7,44 @@
             font-family: Arial, sans-serif;
             text-align: center;
             margin: 50px;
+            background-color: #f7f7f7;
         }
         .input-container {
             margin-bottom: 20px;
         }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
         input[type="text"], input[type="range"], button {
             padding: 10px;
-            margin: 5px;
+            margin: 5px 0;
             border: 1px solid #ccc;
             border-radius: 5px;
+            width: calc(100% - 22px);
         }
         button {
             background-color: #4CAF50;
             color: white;
             border: none;
             cursor: pointer;
+            width: 48%;
+            display: inline-block;
         }
         button:hover {
             background-color: #45a049;
+        }
+        .range-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .range-container span {
+            margin-left: 10px;
+            font-size: 1.2em;
+            width: 60px;
+            text-align: left;
         }
     </style>
 </head>
@@ -38,14 +58,18 @@
     
     <div class="input-container">
         <label for="feedingTime">餵食時間 (毫秒):</label>
-        <input type="range" id="feedingTime" min="1" max="3600000" value="60000">
-        <span id="feedingTimeValue">60000</span> 毫秒
+        <div class="range-container">
+            <input type="range" id="feedingTime" min="0" max="2500" value="60000" oninput="updateFeedingTimeValue(this.value)">
+            <span id="feedingTimeValue">60000</span> 毫秒
+        </div>
     </div>
     
     <div class="input-container">
         <label for="feedingDelay">多久後餵食 (分鐘):</label>
-        <input type="range" id="feedingDelay" min="1" max="60" value="5">
-        <span id="feedingDelayValue">5</span> 分鐘
+        <div class="range-container">
+            <input type="range" id="feedingDelay" min="0" max="60" value="5" oninput="updateFeedingDelayValue(this.value)">
+            <span id="feedingDelayValue">5</span> 分鐘
+        </div>
     </div>
     
     <div>
@@ -92,19 +116,19 @@
             }
         }
 
-        document.getElementById("feedingTime").addEventListener("input", function() {
-            document.getElementById("feedingTimeValue").textContent = this.value;
+        function updateFeedingTimeValue(value) {
+            document.getElementById("feedingTimeValue").textContent = value;
             if (blynk) {
-                blynk.virtualWrite(5, this.value); // 将滑桿的值发送到V5
+                blynk.virtualWrite(5, value); // 将滑桿的值发送到V5
             }
-        });
+        }
 
-        document.getElementById("feedingDelay").addEventListener("input", function() {
-            document.getElementById("feedingDelayValue").textContent = this.value;
+        function updateFeedingDelayValue(value) {
+            document.getElementById("feedingDelayValue").textContent = value;
             if (blynk) {
-                blynk.virtualWrite(2, this.value); // 将滑桿的值发送到V2
+                blynk.virtualWrite(2, value); // 将滑桿的值发送到V2
             }
-        });
+        }
     </script>
 </body>
 </html>
