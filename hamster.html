@@ -29,8 +29,7 @@
             color: white;
             border: none;
             cursor: pointer;
-            width: 48%;
-            display: inline-block;
+            width: 100%;
         }
         button:hover {
             background-color: #45a049;
@@ -53,7 +52,7 @@
     
     <div class="input-container">
         <label for="authToken">Auth Token:</label>
-        <input type="text" id="authToken" placeholder="輸入你的Auth Token">
+        <input type="text" id="authToken" placeholder="CRbcOydyHiTOJTJNBd3kA4XQn2EBjCoP">
     </div>
     
     <div class="input-container">
@@ -73,7 +72,6 @@
     </div>
     
     <div>
-        <button onclick="connectAndScheduleFeeding()">安排餵食</button>
         <button onclick="connectAndFeedNow()">立即餵食</button>
     </div>
     
@@ -86,26 +84,9 @@
             blynk = new Blynk.Blynk(authToken);
         }
 
-        function connectAndScheduleFeeding() {
-            connectToBlynk();
-            scheduleFeeding();
-        }
-
         function connectAndFeedNow() {
             connectToBlynk();
             feedNow();
-        }
-
-        function scheduleFeeding() {
-            var feedingTime = document.getElementById("feedingTime").value;
-            var feedingDelay = document.getElementById("feedingDelay").value;
-
-            if (blynk) {
-                blynk.virtualWrite(5, feedingTime); // 将滑桿的值发送到V5
-                blynk.virtualWrite(2, feedingDelay); // 将滑桿的值发送到V2
-            } else {
-                console.error("請先連接到Blynk");
-            }
         }
 
         function feedNow() {
