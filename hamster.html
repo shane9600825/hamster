@@ -94,7 +94,7 @@
 
         function feedNow() {
             if (blynk) {
-                blynk.virtualWrite(4, 1); // 将虚拟引脚设置为V4
+                blynk.virtualWrite(4, 0); // 将虚拟引脚设置为V4
                 var feedingTime = document.getElementById("feedingTime").value;
                 startCountdown(feedingTime / 1000); // 将毫秒转换为秒并启动倒计时
             } else {
