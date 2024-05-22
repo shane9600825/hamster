@@ -76,8 +76,8 @@
             var feedingDelay = document.getElementById("feedingDelay").value;
 
             if (blynk) {
-                blynk.virtualWrite(1, feedingTime);
-                blynk.virtualWrite(2, feedingDelay);
+                blynk.virtualWrite(5, feedingTime); // 将虚拟引脚设置为V5
+                blynk.virtualWrite(2, feedingDelay); // 保持滑桿为V2
             } else {
                 console.error("請先連接到Blynk");
             }
@@ -85,7 +85,7 @@
 
         function feedNow() {
             if (blynk) {
-                blynk.virtualWrite(4, 1); // 将虚拟引脚设置为V4
+                blynk.virtualWrite(4, 1); // 保持虚拟引脚为V4
             } else {
                 console.error("請先連接到Blynk");
             }
@@ -94,7 +94,7 @@
         document.getElementById("feedingDelay").addEventListener("input", function() {
             document.getElementById("feedingDelayValue").textContent = this.value;
             if (blynk) {
-                blynk.virtualWrite(2, this.value); // 將滑桿的值發送到V2
+                blynk.virtualWrite(2, this.value); // 将滑桿的值发送到V2
             }
         });
     </script>
